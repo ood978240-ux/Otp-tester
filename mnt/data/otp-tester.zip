@@ -1,0 +1,213 @@
+from zipfile import ZipFile
+
+import os
+
+
+
+# Create a directory structure for the OTP tester project
+
+project_dir = "/mnt/data/otp-tester"
+
+os.makedirs(project_dir, exist_ok=True)
+
+
+
+# Define file contents
+
+index_html = """<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>OTP Tester</title>
+
+  <link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+  <div class="container">
+
+    <h2>OTP Tester</h2>
+
+    
+
+    <input type="text" id="phone" placeholder="Enter phone number" />
+
+    <button onclick="generateOTP()">Send OTP</button>
+
+    <p id="otpDisplay"></p>
+
+
+
+    <input type="text" id="userOtp" placeholder="Enter OTP" />
+
+    <button onclick="verifyOTP()">Verify OTP</button>
+
+    
+
+    <p id="result"></p>
+
+  </div>
+
+  <script src="script.js"></script>
+
+</body>
+
+</html>
+
+"""
+
+
+
+style_css = """body {
+
+  font-family: Arial, sans-serif;
+
+  background-color: #f5f5f5;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  height: 100vh;
+
+}
+
+
+
+.container {
+
+  background-color: white;
+
+  padding: 30px;
+
+  border-radius: 10px;
+
+  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+
+  text-align: center;
+
+  width: 300px;
+
+}
+
+
+
+input {
+
+  width: 100%;
+
+  padding: 10px;
+
+  margin: 10px 0;
+
+}
+
+
+
+button {
+
+  padding: 10px;
+
+  width: 100%;
+
+  cursor: pointer;
+
+}
+
+"""
+
+
+
+script_js = """let currentOTP = "";
+
+
+
+function generateOTP() {
+
+  const phone = document.getElementById("phone").value;
+
+  if (!phone || phone.length < 8) {
+
+    alert("Please enter a valid phone number.");
+
+    return;
+
+  }
+
+
+
+  currentOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+  document.getElementById("otpDisplay").innerText = `OTP sent to ${phone}: ${currentOTP}`;
+
+  document.getElementById("result").innerText = "";
+
+}
+
+
+
+function verifyOTP() {
+
+  const userOtp = document.getElementById("userOtp").value;
+
+  const result = document.getElementById("result");
+
+
+
+  if (userOtp === currentOTP) {
+
+    result.innerText = "OTP is valid!";
+
+    result.style.color = "green";
+
+  } else {
+
+    result.innerText = "Invalid OTP.";
+
+    result.style.color = "red";
+
+  }
+
+}
+
+"""
+
+
+
+# Write files
+
+with open(os.path.join(project_dir, "index.html"), "w") as f:
+
+    f.write(index_html)
+
+with open(os.path.join(project_dir, "style.css"), "w") as f:
+
+    f.write(style_css)
+
+with open(os.path.join(project_dir, "script.js"), "w") as f:
+
+    f.write(script_js)
+
+
+
+# Create ZIP file
+
+zip_path = "/mnt/data/otp-tester.zip"
+
+with ZipFile(zip_path, 'w') as zipf:
+
+    for filename in ["index.html", "style.css", "script.js"]:
+
+        zipf.write(os.path.join(project_dir, filename), arcname=filename)
+
+
+
+zip_path
